@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Game 3</title>
+        <meta charset = "utf-8">
+        <link rel="shortcut icon" href="hotdog.gif" type="image/x-icon">
+        <link rel="icon" href="hotdog.gif" type="image/x-icon">
+        <style>
+            .green{
+                color:#27ff00;
+            }
+            .yellow{
+                color:#ffeb00;
+                animation-name:uhoh;
+                animation-duration:0.6s;
+                animation-iteration-count:infinite;
+                animation-timing-function:linear;
+            }
+            @keyframes uhoh{
+                0%{
+                    color:#ffeb00;
+                }
+                50%{
+                    color:#ffba00;
+                }
+            }
+            .red{
+                color:red;
+                animation-name:ohno;
+                animation-duration:0.6s;
+                animation-iteration-count:infinite;
+                animation-timing-function:linear;
+            }
+            @keyframes ohno{
+                0%{
+                    color:#ff0000;
+                }
+                25%{
+                    color:#bc0101;
+                }
+                50%{
+                    color:#f00;
+                }
+                75%{
+                    color:#ff7600;
+                }
+            }
+        </style>
+    </head>
+    <body style="background:linear-gradient(blue,green) fixed; background:-webkit-linear-gradient(blue,green) fixed;">
+        <img  src = "eater.gif" alt = "dog" id = "dog" style = "position:absolute; transition:all 0.2s linear;top:500px;left:300px;">
+        <img src = "hotdog.gif" alt = "bone" id = "bone" style = "position:absolute; top:0px; transition:all 0.2s linear;">
+        <p>Score: <span id = "score">0</span></p>
+        <p>Lives: <span id = "lives" class = "green">3</span></p>
+        <script>
+            var type = "original";
+            switch(type){
+                case "original":
+                    var score = 0, lives = 3, dogX = 6, dogY = 10, boneX = 8, boneY = 0;
+                    function setLeft(id, x){document.getElementById(id).style.left=x+"px";}
+                    function setTop(id, y){document.getElementById(id).style.top=y+"px";}
+                    function randomrange(min, max){return(Math.floor(min+Math.random()*(1+max-min)));}
+                    var gametimer = window.setInterval(moveBone, 200);
+                    document.onkeydown = handleKeys;
+                    function handleKeys(e){
+                        if(e.keyCode === 37){dogX--;}//Left
+                        if(e.keyCode === 39){dogX++;}//Right
+                        if(dogX <= 0){
+                            dogX = 0;
+                        }
+                        if(dogX >= 11.5){
+                            dogX = 11;
+                        }
+                        console.log(document.getElementById("dog").offsetLeft);
+                        setLeft("dog", dogX*50);
+                        setTop("dog", dogY*50);
+                    }
+                    function moveBone(){
+                        boneY=boneY+1;
+                        setLeft("bone",boneX*50);
+                        setTop("bone",boneY*50);
+                        if((dogX == boneX) && (dogY == boneY)){
+                            boneY = randomrange(-6, -2);
+                            boneX = randomrange(0, 5);
+                            score++;
+                            document.getElementById("score").innerHTML = score;
+                        }else if (dogY < boneY-1){
+                            boneY = randomrange(-7, -4);
+                            boneX = randomrange(0, 5);
+                            lives--;
+                            document.getElementById("lives").innerHTML = lives;
+                        }
+                        if(lives === 2){
+                            document.getElementById("lives").className = "yellow";
+                        }
+                        if(lives === 1){
+                            document.getElementById("lives").className = "red";
+                        }
+                        if(score >= 5){
+                            gametimer = window.setInterval(moveBone, 2000);
+                            document.body.style = "background:linear-gradient(yellow,red) fixed; background:-webkit-linear-gradient(yellow,red) fixed;";
+                        }
+                        if(lives <= 0){
+                            var a = confirm("You lost. Score:"+score);
+                            lives = 3;
+                            if(a){
+                                location.reload();
+                            }else{
+                                location.reload();
+                            }
+                        }
+                    }
+                break;
+            }
+        </script>
+    </body>
+</html>
